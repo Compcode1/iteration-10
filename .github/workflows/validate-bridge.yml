@@ -18,22 +18,19 @@ jobs:
           subscription-id: "d5ffd8a5-d994-4eb5-b87c-4442054d233e"
 
       - name: "Read Data-Plane Secret"
-        uses: azure/cli@v2.1.0
-        with:
-          azcliversion: 2.64.0
-          inlineScript: |
-            set +e 
-            for i in {1..10}; do
-              echo "Attempt $i: Querying Key Vault..."
-              az keyvault secret show --name "bridge-validation-secret" --vault-name "kv-efm-test-lab-04" --query "value" -o tsv
-              
-              EXIT_CODE=$?
-              if [[ $EXIT_CODE -eq 0 ]]; then
-                echo "Data-plane read successful. OIDC bridge verified."
-                exit 0
-              fi
-              
-              echo "Authorization not yet propagated. Sleeping 30 seconds..."
-              sleep 30
-            done
-            exit 1
+        run: |
+          set +e 
+          for i in {1..10}; do
+            echo "Attempt $i: Querying Key Vault..."
+            az keyvault secret show --name "bridge-validation-secret" --vault-name "kv-efm-test-lab-04" --query "value" -o tsv
+            
+            EXIT_CODE=$?
+            if [[ $EXIT_CODE -eq 0 ]]; then
+              echo "Data-plane read successful. OIDC bridge verified."
+              exit 0
+            fi
+            
+            echo "Authorization not yet propagated. Sleeping 30 seconds..."
+            sleep 30
+          done
+          exit 1
