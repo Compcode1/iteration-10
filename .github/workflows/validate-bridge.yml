@@ -20,12 +20,11 @@ jobs:
       - name: "Read Data-Plane Secret"
         uses: azure/cli@v2.1.0
         with:
-          azcliversion: 2.63.0
+          azcliversion: 2.64.0
           inlineScript: |
             set +e 
             for i in {1..10}; do
               echo "Attempt $i: Querying Key Vault..."
-              # Execute and print output/errors directly to the console
               az keyvault secret show --name "bridge-validation-secret" --vault-name "kv-efm-test-lab-04" --query "value" -o tsv
               
               EXIT_CODE=$?
